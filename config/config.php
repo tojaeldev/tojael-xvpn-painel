@@ -8,13 +8,13 @@ if (strcmp(basename($_SERVER["SCRIPT_NAME"]), basename(__FILE__)) === 0){
 header("location: /");
 exit;
 }
-date_default_timezone_set('America/Sao_Paulo');
+date_default_timezone_set('Europe/Mainland');
 
 #Configurações do banco de dados
-define("NOME_DB","conectanovo");
-define("NOME_SERVER_DB",'localhost');
-define("USUARIO_DB",'root');
-define("SENHA_DB",'0dd3bdd77a');
+define("NOME_DB","sql7839945");
+define("NOME_SERVER_DB",'sql7.freesqldatabase.com');
+define("USUARIO_DB",'sql7839945');
+define("SENHA_DB",'J69Lv7mU2H');
 
 #Conexão com o banco de dados
 try{
