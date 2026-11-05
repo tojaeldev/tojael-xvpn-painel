@@ -11,30 +11,35 @@ function isUser($uid)
         return false;
     }
 }
+
 function getNickById($uid)
 {
     global $conn;
     $sql = $conn->query("SELECT nome FROM usuarios WHERE id='$uid'")->fetch();
     return @$sql[0];
 }
+
 function getLoginById($uid)
 {
     global $conn;
     $sql = $conn->query("SELECT login FROM usuarios WHERE id='$uid'")->fetch();
     return @$sql[0];
 }
+
 function getIdByNick($nick)
 {
     global $conn;
     $sql = $conn->query("SELECT id FROM usuarios WHERE login='$nick'")->fetch();
     return $sql[0];
 }
+
 function getFolderById($uid)
 {
     global $conn;
     $sql = $conn->query("SELECT pasta_att FROM usuarios WHERE id='$uid'")->fetch();
     return @$sql[0];
 }
+
 function getBan($uid)
 {
     global $conn;
@@ -45,6 +50,7 @@ function getBan($uid)
         return true;
     }
 }
+
 function getData($valor, $uid)
 {
     global $conn;
@@ -59,12 +65,14 @@ function getIdBySid($sid)
     @$uid = $sql[0];
     return $uid;
 }
+
 function getSxtm()
 {
     global $conn;
     $sql = $conn->query("SELECT valor FROM configs WHERE nome='sesexp'")->fetch();
     return $sql['valor'];
 }
+
 function getLogged($sid)
 {
     global $conn;
@@ -82,6 +90,7 @@ function getLogged($sid)
         return false;
     }
 }
+
 function getAdm($uid)
 {
     global $conn;
@@ -92,6 +101,7 @@ function getAdm($uid)
         return false;
     }
 }
+
 function getOwner($uid)
 {
     global $conn;
@@ -102,6 +112,7 @@ function getOwner($uid)
         return false;
     }
 }
+
 function getUser($uid)
 {
     global $conn;
@@ -112,12 +123,37 @@ function getUser($uid)
         return false;
     }
 }
+
 function getConfig($name)
 {
     global $conn;
     $sql = $conn->query("SELECT valor FROM configs WHERE nome='$name'")->fetch();
-    return $sql['valor'];
+    $valor = @$sql['valor'];
+
+    // Se a configuração for o link do site, forçamos o protocolo correto (HTTPS)
+    if ($name === 'link' && !empty($valor)) {
+        $isSecure = false;
+        if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+            $isSecure = true;
+        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
+            $isSecure = true;
+        } elseif (!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) {
+            $isSecure = true;
+        }
+
+        $protocol = $isSecure ? "https://" : "http://";
+        
+        // Remove qualquer http:// antigo e coloca o protocolo correto com o host atual
+        $parsed = parse_url($valor);
+        $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : (isset($parsed['host']) ? $parsed['host'] : '');
+        $path = isset($parsed['path']) ? $parsed['path'] : '';
+        
+        $valor = $protocol . $host . rtrim($path, '/');
+    }
+
+    return $valor;
 }
+
 function addVersion($user)
 {
     global $conn;
@@ -125,6 +161,7 @@ function addVersion($user)
     $cc = $sql[0] + 1;
     $res = $conn->query("UPDATE configuracoes SET versao='$cc' WHERE id_owner='$user'");
 }
+
 function addSms($user)
 {
     global $conn;
@@ -132,6 +169,7 @@ function addSms($user)
     $cc = $sql[0] + 1;
     $res = $conn->query("UPDATE mensagens SET att='$cc' WHERE id_owner='$user'");
 }
+
 function getConfigUser($valor, $user)
 {
     global $conn;
@@ -140,14 +178,17 @@ function getConfigUser($valor, $user)
         $sql = $conn->query("SELECT $valor FROM configuracoes WHERE id_owner='$user'")->fetch();
         return $sql[$valor];
     } else {
+        return "";
     }
 }
+
 function isLogged($sid)
 {
     if (getLogged($sid) == false) {
         header("location: /");
     }
 }
+
 function download($arquivo)
 {
     header("Content-Type: application/force-download");
@@ -160,6 +201,7 @@ function download($arquivo)
     readfile($arquivo);
     flush();
 }
+
 function delTree($dir)
 {
     $files = array_diff(scandir($dir), array('.', '..'));
