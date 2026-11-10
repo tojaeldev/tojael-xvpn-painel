@@ -2,6 +2,9 @@ FROM php:8.1-apache
 
 RUN docker-php-ext-install pdo pdo_mysql mysqli
 
+# Ativar o mod_rewrite para o .htaccess funcionar
+RUN a2enmod rewrite
+
 COPY . /var/www/html/
 
 RUN chown -R www-data:www-data /var/www/html \
