@@ -15,7 +15,7 @@ if (strcmp(basename($_SERVER["SCRIPT_NAME"]), basename(__FILE__)) === 0) {
 date_default_timezone_set('Africa/Luanda');
 
 // CONFIGURAÇÕES TIDB CLOUD
-define("NOME_DB", "sys");
+define("NOME_DB", "test");
 define("NOME_SERVER_DB", "gateway01.eu-central-1.prod.aws.tidbcloud.com");
 define("PORTA_DB", "4000");
 define("USUARIO_DB", "2JfvizAdu6FMGru.root");
