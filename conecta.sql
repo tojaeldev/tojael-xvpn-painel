@@ -42,8 +42,8 @@ INSERT INTO `configs` (`id`, `nome`, `valor`) VALUES
 (12, 'logo', 'https://i.ibb.co/q1LnDVT/logo.png'),
 (13, 'largura', ''),
 (14, 'altura', ''),
-(15, 'link', 'http://davidsdy.xyz'),
-(16, 'titulo', 'Painel Conecta 4G');
+(15, 'link', 'https://tojael-xvpn-painel.onrender.com'),
+(16, 'titulo', 'Tojael XVPN PAINEL');
 
 -- --------------------------------------------------------
 
@@ -165,7 +165,7 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `nome`, `login`, `senha`, `nivel`, `banido`, `limite_pay`, `limite_ser`, `pasta_att`) VALUES
-(1, 'Davidsdy', 'admin', '21232f297a57a5a743894a0e4a801fc3', 3, 0, 4, 15, 'admin');
+(1, 'Tojael Daniel Dev', 'dev11', '21232f297a57a5a743894a0e4a801fc3', 3, 0, 4, 15, 'dev11');
 
 --
 -- Indexes for dumped tables
