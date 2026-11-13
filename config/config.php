@@ -1,37 +1,55 @@
+
 <?php
 ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
 error_reporting(0);
+
 ob_start();
 session_start();
-if (strcmp(basename($_SERVER["SCRIPT_NAME"]), basename(__FILE__)) === 0){
-header("location: /");
-exit;
-}
-date_default_timezone_set('Europe/Mainland');
 
-#Configurações do banco de dados
-define("NOME_DB","sql7839945");
-define("NOME_SERVER_DB",'sql7.freesqldatabase.com');
-define("USUARIO_DB",'sql7839945');
-define("SENHA_DB",'J69Lv7mU2H');
-
-#Conexão com o banco de dados
-try{
-    $conn = new PDO("mysql:host=".NOME_SERVER_DB."; dbname=".NOME_DB."",
-    USUARIO_DB,
-    SENHA_DB,
-    array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4"));
-}catch(PDOException $e){
-    echo "<center><h3>Banco de dados desconectado !<br>".$e->getMessage();
+if (strcmp(basename($_SERVER["SCRIPT_NAME"]), basename(__FILE__)) === 0) {
+    header("location: /");
     exit;
 }
 
-#Variaveis já definidas
-$sid = isset($_SESSION['logado'])?$_SESSION['logado']: '';
-$acao = isset($_GET['acao'])?$_GET['acao']: '';
-$uid = getIdBySid($sid); 
+date_default_timezone_set('Africa/Luanda');
+
+// CONFIGURAÇÕES TIDB CLOUD
+define("NOME_DB", "tojael-xvpn-painel");
+define("NOME_SERVER_DB", "gateway01.eu-central-1.prod.aws.tidbcloud.com");
+define("PORTA_DB", "4000");
+define("USUARIO_DB", "2JfvizAdu6FMGru.root");
+define("SENHA_DB", "kyDIFGs7m4gVigbG");
+
+// CONEXÃO COM O BANCO
+try {
+    $conn = new PDO(
+        "mysql:host=" . NOME_SERVER_DB .
+        ";port=" . PORTA_DB .
+        ";dbname=" . NOME_DB .
+        ";charset=utf8mb4",
+        USUARIO_DB,
+        SENHA_DB,
+        array(
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::MYSQL_ATTR_SSL_CA => "/etc/ssl/certs/ca-certificates.crt",
+            PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => true
+        )
+    );
+} catch (PDOException $e) {
+    error_log("Erro de conexão TiDB: " . $e->getMessage());
+    http_response_code(500);
+    exit("Banco de dados temporariamente indisponível.");
+}
+
+// VARIÁVEIS
+$sid = isset($_SESSION['logado']) ? $_SESSION['logado'] : '';
+$acao = isset($_GET['acao']) ? $_GET['acao'] : '';
 
 require_once($_SERVER['DOCUMENT_ROOT'] . "/config/Mobile_Detect.php");
 $detect = new Mobile_Detect;
+
 require_once($_SERVER['DOCUMENT_ROOT'] . "/config/conteudo.php");
+
+$uid = getIdBySid($sid);
